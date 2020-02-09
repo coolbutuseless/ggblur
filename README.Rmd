@@ -16,7 +16,49 @@ library(ggplot2)
 library(ggblur)
 ```
 
-# ggblur
+
+
+
+
+```{r echo = FALSE, eval = FALSE}
+# Quick logo generation. Borrowed heavily from Nick Tierney's Syn logo process
+library(magick)
+library(showtext)
+font_add_google("Racing Sans One", "gf")
+
+
+# pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/package/ggblur"))
+```
+
+
+```{r echo = FALSE, eval = FALSE}
+img <- image_read("man/figures/white.png")
+
+
+hexSticker::sticker(subplot  = img,
+                    s_x      = 0.92,
+                    s_y      = 1.2,
+                    s_width  = 1.5,
+                    s_height = 0.95,
+                    package  = "ggblur",
+                    p_x      = 1,
+                    p_y      = 1,
+                    p_color  = "#223344",
+                    p_family = "gf",
+                    p_size   = 9,
+                    h_size   = 1.2,
+                    h_fill   = "#ffffff",
+                    h_color  = "#223344",
+                    filename = "man/figures/logo.png")
+
+image_read("man/figures/logo.png")
+```
+
+
+
+
+
+# ggblur   <img src="man/figures/logo.png" align="right" height=230/>
 
 <!-- badges: start -->
 ![](http://img.shields.io/badge/cool-useless-green.svg)
