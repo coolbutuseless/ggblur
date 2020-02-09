@@ -1,0 +1,15 @@
+Package: ggblur
+Type: Package
+Title: Blurry Geoms for Ggplot2
+Version: 0.1.0
+Author: mikefc
+Maintainer: mikefc <mikefc@coolbutuseless.com>
+Description: Blurry geoms for ggplot2.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    ggplot2,
+    grid,
+    scales
+RoxygenNote: 7.0.2
