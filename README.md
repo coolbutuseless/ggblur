@@ -1,24 +1,27 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggblur <img src="man/figures/logo.png" align="right" height=230/>
+# ggblur <img src="man/figures/logo-blurred.png" align="right" height=230/>
 
 <!-- badges: start -->
 
 ![](http://img.shields.io/badge/cool-useless-green.svg)
 <!-- badges: end -->
 
-`ggblur` provides an augmented version of `geom_point()` which adds
-**blur** as an aesthetic.
+`ggblur` provides `geom_point_blur()` for use in `ggplot` - this geom
+allows you to control the blurriness of the drawn points, but is
+otherwise identical to the standard `geom_point()`.
 
 #### What’s in the box?
 
   - `geom_point_blur()`
-      - same as `geom_point()` but accepts `blur_size` as a mappable
+      - same as `geom_point()` but now accepts `blur_size` as an
         aesthetic
-      - also allows for setting of `blur_steps` and `blur_alpha`
+      - also allows for control of the smoothness of the blur
+        (`blur_steps`) and the maximum opacity (`blur_alpha`)
   - `scale_blur_size_continuous()`, `scale_blur_size_discrete()` and
-    `scale_blur_size_manual()` for controlling blur size.
+    `scale_blur_size_manual()` for controlling `blur_size` when used as
+    a mapped aesthetic/
 
 #### Similar packages
 
@@ -32,13 +35,19 @@
 
 #### How it works
 
-Given the current lack of radial gradients in grid graphics, blur is
-simulated by rendering multiple points at the given location.
+Blur is simulated by keeping the original point, and drawing a sequence
+of larger, faded points behind it (illustrated below).
 
-However, Paul Murrell has some experiments to add radial gradients to
-grid graphics - see [his
-github](https://github.com/pmur002/r-defs-proposal). When this
-eventuates
+The number of points rendered is controlled by `blur_steps` and the
+distance to which the blur extends beyond the edge of the original point
+is controlled by `blur_size`.
+
+Note: Paul Murrell has some experiments to add radial gradients to grid
+graphics (see [his github](https://github.com/pmur002/r-defs-proposal))
+and if this becomes part of grid it may be a better method of simulating
+blur.
+
+<img src="man/figures/how.png" width="50%">
 
 ## Installation
 
@@ -52,7 +61,8 @@ devtools::install_github("coolbutuseless/ggblur")
 
 ## Example 1 - constant `blur_size`
 
-This is a basic example which shows you how to solve a common problem:
+When not used as a mapped aesthetic within `aes()`, the same `blur_size`
+is applied to every point.
 
 ``` r
 library(ggplot2)
@@ -68,7 +78,8 @@ ggplot(mtcars) +
 
 ## Example 2 - mapping `blur_size` as an aesthetic
 
-This is a basic example which shows you how to solve a common problem:
+When used as a mapped aesthetic within `aes()`, the `blur_size` is
+calculated individually for each point.
 
 ``` r
 library(ggplot2)
@@ -83,6 +94,10 @@ ggplot(mtcars) +
 <img src="man/figures/README-example2-1.png" width="100%" />
 
 ## Example 3 - control over blur parameters
+
+`blur_alpha`, `blur_steps` and
+`scale_blue_size_continuous/discrete/manual()` can be used to further
+customise the appearance.
 
 ``` r
 ggplot(mtcars) +

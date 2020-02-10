@@ -1,11 +1,12 @@
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Draw Blurry Points
+#' Draw blurry points in ggplot
 #'
-#' @param blur_size ow far the blur extends from the edge of the drawn point.
+#' @param blur_size How far should the blur extend from the edge of the drawn point.
 #'        Default: 3
-#' @param blur_steps Number of point repetitions to create blur. Default: 20
-#' @param blur_alpha The alpha for the inner-most part of the blur. Note: this
+#' @param blur_steps Number of repetitions to create blur. A higher value for
+#'        \code{blur_steps} will results in a smoother looking blur. Default: 20
+#' @param blur_alpha The opacity for the inner-most part of the blur. Note: this
 #' is only approximate as the actual rendering of multiple layers with small alpha
 #' does not always result in the expected alpha.  Values above 1 are allowed
 #' here. Please experiment to achieve the desired results. Default: 1

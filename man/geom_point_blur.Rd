@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom-point-blur.R
 \name{geom_point_blur}
 \alias{geom_point_blur}
-\title{Draw Blurry Points}
+\title{Draw blurry points in ggplot}
 \usage{
 geom_point_blur(
   mapping = NULL,
@@ -22,18 +22,19 @@ geom_point_blur(
 \item{mapping, data, stat, position, ..., na.rm, show.legend, inherit.aes}{See
 documentation for \code{ggplot2::geom_point()}}
 
-\item{blur_size}{ow far the blur extends from the edge of the drawn point.
+\item{blur_size}{How far should the blur extend from the edge of the drawn point.
 Default: 3}
 
-\item{blur_steps}{Number of point repetitions to create blur. Default: 20}
+\item{blur_steps}{Number of repetitions to create blur. A higher value for
+\code{blur_steps} will results in a smoother looking blur. Default: 20}
 
-\item{blur_alpha}{The alpha for the inner-most part of the blur. Note: this
+\item{blur_alpha}{The opacity for the inner-most part of the blur. Note: this
 is only approximate as the actual rendering of multiple layers with small alpha
 does not always result in the expected alpha.  Values above 1 are allowed
 here. Please experiment to achieve the desired results. Default: 1}
 }
 \description{
-Draw Blurry Points
+Draw blurry points in ggplot
 }
 \examples{
 \dontrun{
