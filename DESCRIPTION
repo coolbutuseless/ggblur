@@ -1,7 +1,7 @@
 Package: ggblur
 Type: Package
 Title: Blurry Geoms for Ggplot2
-Version: 0.1.0
+Version: 0.1.1
 Author: mikefc
 Maintainer: mikefc <mikefc@coolbutuseless.com>
 Description: Blurry geoms for ggplot2.

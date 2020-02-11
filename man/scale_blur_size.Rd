@@ -14,7 +14,7 @@ scale_blur_size_continuous(
   limits = NULL,
   range = c(3, 9),
   trans = "identity",
-  guide = FALSE
+  guide = "legend"
 )
 
 scale_blur_size(
@@ -24,17 +24,17 @@ scale_blur_size(
   limits = NULL,
   range = c(3, 9),
   trans = "identity",
-  guide = FALSE
+  guide = "legend"
 )
 
-scale_blur_size_discrete(..., range = c(4, 9), guide = FALSE)
+scale_blur_size_discrete(..., range = c(4, 9), guide = "legend")
 
 scale_blur_size_manual(..., values)
 }
 \arguments{
 \item{name, breaks, labels, limits, range, trans, values, ...}{see \code{?ggplot2::scale_size()}}
 
-\item{guide}{default: FALSE i.e. don't draw guide for blur.}
+\item{guide}{default: 'legend'.}
 }
 \description{
 Scale blur size

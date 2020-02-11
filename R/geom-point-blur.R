@@ -58,6 +58,8 @@ geom_point_blur <- function(mapping = NULL, data = NULL,
 #' @format NULL
 #' @usage NULL
 #'
+#' @importFrom stats qnorm
+#' @importFrom utils head
 #' @import grid
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,7 +146,7 @@ GeomPointBlur <- ggproto(
     )
   },
 
-  draw_key = ggplot2::draw_key_point
+  draw_key = draw_key_point_blur
 )
 
 
