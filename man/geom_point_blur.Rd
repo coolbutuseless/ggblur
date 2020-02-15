@@ -12,7 +12,6 @@ geom_point_blur(
   ...,
   blur_size = 3,
   blur_steps = 20,
-  blur_alpha = 1,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -27,11 +26,6 @@ Default: 3}
 
 \item{blur_steps}{Number of repetitions to create blur. A higher value for
 \code{blur_steps} will results in a smoother looking blur. Default: 20}
-
-\item{blur_alpha}{The opacity for the inner-most part of the blur. Note: this
-is only approximate as the actual rendering of multiple layers with small alpha
-does not always result in the expected alpha.  Values above 1 are allowed
-here. Please experiment to achieve the desired results. Default: 1}
 }
 \description{
 Draw blurry points in ggplot
@@ -39,7 +33,7 @@ Draw blurry points in ggplot
 \examples{
 \dontrun{
 ggplot(mtcars) +
-geom_point_blur(aes(mpg, wt, blur_size = disp), blur_alpha = 0.3, blur_steps = 2) +
+geom_point_blur(aes(mpg, wt, blur_size = disp), blur_steps = 2) +
   scale_blur_size_continuous(range = c(1, 15)) +
   theme_bw() +
   labs(title = "Larger blur indicates larger engine displacement")

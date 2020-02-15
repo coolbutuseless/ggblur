@@ -18,7 +18,7 @@ otherwise identical to the standard `geom_point()`.
       - same as `geom_point()` but now accepts `blur_size` as an
         aesthetic
       - also allows for control of the smoothness of the blur
-        (`blur_steps`) and the maximum opacity (`blur_alpha`)
+        (`blur_steps`)
   - `scale_blur_size_continuous()`, `scale_blur_size_discrete()` and
     `scale_blur_size_manual()` for controlling `blur_size` when used as
     a mapped aesthetic/
@@ -47,7 +47,14 @@ graphics (see [his github](https://github.com/pmur002/r-defs-proposal))
 and if this becomes part of grid it may be a better method of simulating
 blur.
 
-<img src="man/figures/how.png" width="50%">
+<div>
+
+<img src="man/figures/point.png" width="45%" align="left">
+<img src="man/figures/how.png" width="45%" align="left">
+
+</div>
+
+<div style="clear: both;" />
 
 ## Installation
 
@@ -95,16 +102,27 @@ ggplot(mtcars) +
 
 ## Example 3 - control over blur parameters
 
-`blur_alpha`, `blur_steps` and
-`scale_blue_size_continuous/discrete/manual()` can be used to further
-customise the appearance.
+`blur_steps` and `scale_blue_size_continuous/discrete/manual()` can be
+used to further customise the appearance.
 
 ``` r
 ggplot(mtcars) +
-  geom_point_blur(aes(mpg, wt, blur_size = disp), blur_alpha = 0.3, blur_steps = 2) +
+  geom_point_blur(aes(mpg, wt, blur_size = disp), blur_steps = 3) +
   scale_blur_size_continuous(range = c(1, 15)) +
   theme_bw() + 
   labs(title = "Larger blur indicates larger engine displacement")
 ```
 
 <img src="man/figures/README-example3-1.png" width="100%" />
+
+## Example 4 - blur with colour
+
+``` r
+ggplot(mtcars) +
+  geom_point_blur(aes(mpg, wt, blur_size = disp, colour = as.factor(cyl))) +
+  scale_blur_size_continuous(range = c(1, 15)) +
+  theme_bw() + 
+  labs(title = "Larger blur indicates larger engine displacement")
+```
+
+<img src="man/figures/README-example4-1.png" width="100%" />

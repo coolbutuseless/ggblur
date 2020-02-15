@@ -6,10 +6,6 @@
 #'        Default: 3
 #' @param blur_steps Number of repetitions to create blur. A higher value for
 #'        \code{blur_steps} will results in a smoother looking blur. Default: 20
-#' @param blur_alpha The opacity for the inner-most part of the blur. Note: this
-#' is only approximate as the actual rendering of multiple layers with small alpha
-#' does not always result in the expected alpha.  Values above 1 are allowed
-#' here. Please experiment to achieve the desired results. Default: 1
 #' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes See
 #' documentation for \code{ggplot2::geom_point()}
 #'
@@ -19,7 +15,7 @@
 #' @examples
 #' \dontrun{
 #' ggplot(mtcars) +
-#' geom_point_blur(aes(mpg, wt, blur_size = disp), blur_alpha = 0.3, blur_steps = 2) +
+#' geom_point_blur(aes(mpg, wt, blur_size = disp), blur_steps = 2) +
 #'   scale_blur_size_continuous(range = c(1, 15)) +
 #'   theme_bw() +
 #'   labs(title = "Larger blur indicates larger engine displacement")
@@ -30,7 +26,6 @@ geom_point_blur <- function(mapping = NULL, data = NULL,
                             ...,
                             blur_size   = 3,
                             blur_steps  = 20,
-                            blur_alpha  = 1,
                             na.rm       = FALSE,
                             show.legend = NA,
                             inherit.aes = TRUE) {
@@ -45,7 +40,6 @@ geom_point_blur <- function(mapping = NULL, data = NULL,
     params      = list(
       na.rm      = na.rm,
       blur_steps = blur_steps,
-      blur_alpha = blur_alpha,
       ...
     )
   )
@@ -75,8 +69,7 @@ GeomPointBlur <- ggproto(
     alpha      = NA,
     stroke     = 0.5,
     blur_size  = 3,
-    blur_steps = 20,
-    blur_alpha = 1
+    blur_steps = 20
   ),
 
   draw_panel = function(data, panel_params, coord, na.rm = FALSE) {
@@ -90,19 +83,22 @@ GeomPointBlur <- ggproto(
     # What should be the alpha of an individual step?
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     blur_steps <- coords$blur_steps[1]
-    blur_alpha <- coords$blur_alpha/blur_steps
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Create a blur grob somewhere between [0,1] * blur_size.
     # Ensure lwd = 0 so that no outer stroke is included.
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    create_blur_grob <- function(fraction) {
+    create_blur_grob <- function(step) {
+
+      fraction   <- fractions[step]
+      this_alpha <- ind_alpha[step]
+
       grid::pointsGrob(
         coords$x, coords$y,
         pch = coords$shape,
         gp = grid::gpar(
-          col      = alpha(coords$colour, blur_alpha),
-          fill     = alpha(coords$fill  , blur_alpha),
+          col      = alpha(coords$colour, this_alpha),
+          fill     = alpha(coords$fill  , this_alpha),
           fontsize = (coords$size + coords$blur_size * fraction) * .pt +
             coords$stroke * .stroke / 2,
           lwd      = 0
@@ -118,9 +114,20 @@ GeomPointBlur <- ggproto(
     fractions <- head(fractions, -1)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Sequence of individual alphas
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    top_alpha <- coords$alpha[1]
+    if (is.null(top_alpha) || is.na(top_alpha)) {
+      top_alpha <- 1
+    }
+    cumulative_alpha <- seq(0.1, top_alpha, length.out = blur_steps + 1)
+    cumulative_alpha <- head(cumulative_alpha, -1)
+    ind_alpha  <- calc_individual_alpha(cumulative_alpha)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Create a sequence of blur steps as grobs and package as a grobTree
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    blur_grobs <- lapply(fractions, create_blur_grob)
+    blur_grobs <- lapply(seq_along(fractions), create_blur_grob)
     blur_grobs <- do.call(grid::grobTree, blur_grobs)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,8 +164,8 @@ if (FALSE) {
   library(ggplot2)
 
   (p <- ggplot(mtcars) +
-      geom_point_blur(aes(mpg, wt, blur_size = disp), blur_alpha = 0.5, blur_steps = 20) +
-      scale_blur_size_continuous(range = c(0, 10)) +
+      geom_point(aes(mpg, wt, blur_size = disp), blur_steps = 20) +
+      # scale_blur_size_continuous(range = c(0, 10)) +
       theme_bw()
   )
 

@@ -37,19 +37,22 @@ draw_key_point_blur <- function(data, params, size) {
   # What should be the alpha of an individual step?
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   blur_steps <- coords$blur_steps[1]
-  blur_alpha <- coords$blur_alpha/blur_steps
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Create a blur grob somewhere between [0,1] * blur_size.
   # Ensure lwd = 0 so that no outer stroke is included.
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  create_blur_grob <- function(fraction) {
+  create_blur_grob <- function(step) {
+
+    fraction   <- fractions[step]
+    this_alpha <- ind_alpha[step]
+
     grid::pointsGrob(
       x = 0.5, y = 0.5,
       pch = coords$shape,
       gp = grid::gpar(
-        col      = alpha(coords$colour, blur_alpha),
-        fill     = alpha(coords$fill  , blur_alpha),
+        col      = alpha(coords$colour, this_alpha),
+        fill     = alpha(coords$fill  , this_alpha),
         fontsize = (coords$size + coords$blur_size * fraction) * .pt +
           coords$stroke * .stroke / 2,
         lwd      = 0
@@ -65,11 +68,21 @@ draw_key_point_blur <- function(data, params, size) {
   fractions <- head(fractions, -1)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Sequence of individual alphas
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  top_alpha <- coords$alpha[1]
+  if (is.null(top_alpha) || is.na(top_alpha)) {
+    top_alpha <- 1
+  }
+  cumulative_alpha <- seq(0.1, top_alpha, length.out = blur_steps + 1)
+  cumulative_alpha <- head(cumulative_alpha, -1)
+  ind_alpha  <- calc_individual_alpha(cumulative_alpha)
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Create a sequence of blur steps as grobs and package as a grobTree
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  blur_grobs <- lapply(fractions, create_blur_grob)
+  blur_grobs <- lapply(seq_along(fractions), create_blur_grob)
   blur_grobs <- do.call(grid::grobTree, blur_grobs)
-
 
 
   grid::grobTree(
